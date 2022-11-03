@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+  MCQ QUIZ |User
+{% endblock %}
+
+{% block body %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<div style="font-size: 50px; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+   Welcome {{var}}
+</div>
+<hr>
+this is mcq web application created
+<br>
+by using python-flask, my sql data base
+<br>
+for frontend - html , css , java script
+<br>
+flask -
+SQLAlchemy
+<br>
+<br>
+<br>
+<h1>CREATED BY ASHUTOSH SINGH</h1>
+
+
+
+{% endblock %}
+
+
+{% block navbar%}
+<li class="nav-item">
+    <a href="/quizstrt" class="nav-link">
+<!--<i class="nav-icon fas fa-tachometer-alt"></i> -->
+      <p style ="font-family: 'Orbitron', sans-serif;">
+        Take Quiz
+      </p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="/show" class="nav-link">
+      <p style ="font-family: 'Orbitron', sans-serif;">
+        Check Results
+      </p>
+    </a>
+  </li>
+<li class="nav-item">
+    <a href="/logout" class="nav-link">
+      <p style ="font-family: 'Orbitron', sans-serif;">
+        Logout
+      </p>
+    </a>
+  </li>
+{% endblock %}

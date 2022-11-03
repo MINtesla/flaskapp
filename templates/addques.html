@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}
+  MCQ QUIZ |Add Question
+{% endblock %}
+
+{% block body %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<div
+    style="font-size: 50px; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+    Add Question
+</div>
+<br>
+<form id="quickForm" action="/addquestion" method="POST" style="height: 2.5rem; font-size: 1rem;left: 20px;">
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="question" placeholder="Type Question.." aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op1" placeholder="Option #1" aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op2" placeholder="Option #2" aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op3" placeholder="Option #3" aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op4" placeholder="Option #4" aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+    <div class="input-group mb-3">
+        <input type="Number" class="form-control" name="corop" min ="1" max = "4" placeholder="Correct Option NO" aria-label="Username" aria-describedby="basic-addon1" required>
+    </div>
+    <div style="font-size: 30px; margin-top: 1.5rem;">
+        <button type="submit" class="btn btn-outline-secondary" style="width: 65rem; height: 2.5rem; font-size: 1rem;left: 20px;">Add Question</button>
+    </div>
+</form>
+{% endblock %}
+
+
+{% block navbar%}
+<li class="nav-item">
+    <a href="/add" class="nav-link">
+        <p style ="font-family: 'Orbitron', sans-serif;">
+            Add Questions
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="/showall" class="nav-link">
+        <p style ="font-family: 'Orbitron', sans-serif;">
+            Check All Results
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="/logout" class="nav-link">
+        <p style ="font-family: 'Orbitron', sans-serif;">
+            Logout
+        </p>
+    </a>
+</li>
+{% endblock %}

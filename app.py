@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
+import os
+port = int(os.environ.get('PORT', 5000))
 import pymysql
 
 app = Flask(__name__, template_folder="templates")
@@ -478,4 +480,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0",  port=port)

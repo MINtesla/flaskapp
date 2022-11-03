@@ -6,8 +6,9 @@ port = int(os.environ.get('PORT', 5000))
 import pymysql
 
 app = Flask(__name__, template_folder="templates")
-
-conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/FlaskProject"
+#
+#conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flaskproject"
+conn= "mysql+pymysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
 # cloud string
 
 app.config['SQLALCHEMY_DATABASE_URI'] = conn
@@ -171,29 +172,30 @@ def home():
 
 
 class regi(db.Model):  # regi table
-    email = db.Column(db.String(50), primary_key=True)
-    name = db.Column(db.String(20), nullable=False, unique=False)
-    password = db.Column(db.String(20), nullable=False, unique=False)
-    marks = db.Column(db.String(20), nullable=False)
-    attempt = db.Column(db.String(20), nullable=False)
+    EMAIL = db.Column(db.String(50), primary_key=True)
+    NAME = db.Column(db.String(20), nullable=False, unique=False)
+    PASSWORD = db.Column(db.String(20), nullable=False, unique=False)
+    MARKS = db.Column(db.String(20), nullable=False)
+    ATTEMPT = db.Column(db.String(20), nullable=False)
 
-    def __int__(self, email, name, password, marks, attempt):
-        self.email = email
-        self.name = name
-        self.password = password
-        self.marks = marks
-        self.attempt = attempt
+    def __int__(self, EMAIL, NAME , PASSWORD, MARKS, ATTEMPT):
+        self.EMAIL = EMAIL
+        self.NAME= NAME
+        self.PASSWORD = PASSWORD
+        self.MARKS = MARKS
+        self.ATTEMPT = ATTEMPT
 
 
 @app.route("/onsignup", methods=["POST", "GET"])
 def submit():
     if request.method == "POST":
         # 'add entry to DB'
-        name = request.form.get('name')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        entry = regi(email=email, name=name, password=password, marks=0, attempt=0)
-        db.session.add(entry)
+
+        NAME = request.form.get('name')
+        EMAIL = request.form.get('email')
+        PASSWORD = request.form.get('password')
+        ENTRY = regi(EMAIL=EMAIL, NAME= NAME, PASSWORD=PASSWORD, MARKS=0, ATTEMPT=0)
+        db.session.add(ENTRY)
         db.session.commit()
         # complete = str(name) + "," + str(email) + "," + str(password) + "," + "0" + "," + "0" + "," + "0"
         # myFile=open("dataCSV.txt" , "a")
@@ -291,6 +293,7 @@ def showll():
     objects_list = []
     whole = []
     data = engine.execute("select name, email , marks from regi").fetchall()
+    #data = regi.query.all()
     print(data)
     num = 0
     for element in data:
@@ -302,21 +305,21 @@ def showll():
 
 
 class que(db.Model):
-    Quid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Ques = db.Column(db.String(100), unique=False, nullable=False)
-    Option1 = db.Column(db.String(100), unique=False, nullable=False)
-    Option2 = db.Column(db.String(100), unique=False, nullable=False)
-    Option3 = db.Column(db.String(100), unique=False, nullable=False)
-    Option4 = db.Column(db.String(100), unique=False, nullable=False)
-    CorrAns = db.Column(db.Integer, unique=False, nullable=False)
+    QUID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    QUES = db.Column(db.String(100), unique=False, nullable=False)
+    OPTION1 = db.Column(db.String(100), unique=False, nullable=False)
+    OPTION2 = db.Column(db.String(100), unique=False, nullable=False)
+    OPTION3 = db.Column(db.String(100), unique=False, nullable=False)
+    OPTION4 = db.Column(db.String(100), unique=False, nullable=False)
+    CORRANS = db.Column(db.Integer, unique=False, nullable=False)
 
-    def __init__(self, Ques, Option1, Option2, Option3, Option4, CorrAns):
-        self.Ques = Ques
-        self.Option1 = Option1
-        self.Option2 = Option2
-        self.Option3 = Option3
-        self.Option4 = Option4
-        self.CorrAns = CorrAns
+    def __init__(self, QUES, OPTION1, OPTION2, OPTION3, OPTION4, CORRANS):
+        self.QUES = QUES
+        self.OPTION1 = OPTION1
+        self.OPTION2 = OPTION2
+        self.OPTION3 = OPTION3
+        self.OPTION4 = OPTION4
+        self.CORRANS = CORRANS
 
 
 @app.route("/addquestion", methods=["POST", "GET"])
@@ -329,7 +332,7 @@ def add_question():
     cor = request.form.get('corop')
     complete = ques + "," + op1 + "," + op2 + "," + op3 + "," + op4 + "," + cor
     print(complete)
-    question = que(Ques=ques, Option1=op1, Option2=op2, Option3=op3, Option4=op4, CorrAns=cor)
+    question = que(QUES=ques, OPTION1=op1, OPTION2=op2, OPTION3=op3, OPTION4=op4, CORRANS=cor)
     db.session.add(question)
     db.session.commit()
     #
@@ -421,7 +424,7 @@ def submit_quiz():
     print(emailsave.emailid)
     print(data)
     engine.execute('Update regi set marks =%s where email =%s', [score, emailsave.emailid])
-    engine.execute('Update regi set attempt =%s where email =%s', [data[0] + 1, emailsave.emailid])
+    engine.execute('Update regi set attempt =%s where email =%s', [data[0]+ 1, emailsave.emailid])
     print("Your score is:", score)
     return render_template("user.html")
 

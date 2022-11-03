@@ -8,11 +8,13 @@ import pymysql
 app = Flask(__name__, template_folder="templates")
 
 conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/FlaskProject"
+# cloud string
 
 app.config['SQLALCHEMY_DATABASE_URI'] = conn
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+
 engine = create_engine(conn)
 connection = engine.raw_connection()
 cursor = connection.cursor()

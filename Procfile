@@ -1,1 +1,1 @@
-web: gunicorn ap¸p:app
+web: gunicorn

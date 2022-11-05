@@ -7,8 +7,8 @@ port = int(os.environ.get('PORT', 5000))
 
 app = Flask(__name__, template_folder="templates")
 #
-conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flproj"
-#conn= "mysql+pymysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
+#conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flproj"
+conn= "mysql+pymysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
 # cloud string
 
 app.config['SQLALCHEMY_DATABASE_URI'] = conn

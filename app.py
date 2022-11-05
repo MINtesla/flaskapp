@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
+
 import os
 port = int(os.environ.get('PORT', 5000))
-import pymysql
 
 app = Flask(__name__, template_folder="templates")
 #
-#conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flaskproject"
-conn= "mysql+pymysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
+conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flproj"
+#conn= "mysql+pymysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
 # cloud string
 
 app.config['SQLALCHEMY_DATABASE_URI'] = conn
@@ -20,6 +20,7 @@ engine = create_engine(conn)
 connection = engine.raw_connection()
 cursor = connection.cursor()
 
+from model import regi, que
 q = 0
 qq = 0
 
@@ -171,19 +172,19 @@ def home():
 # return render_template("showProd.html" , list= objects_list)
 
 
-class regi(db.Model):  # regi table
-    EMAIL = db.Column(db.String(50), primary_key=True)
-    NAME = db.Column(db.String(20), nullable=False, unique=False)
-    PASSWORD = db.Column(db.String(20), nullable=False, unique=False)
-    MARKS = db.Column(db.String(20), nullable=False)
-    ATTEMPT = db.Column(db.String(20), nullable=False)
-
-    def __int__(self, EMAIL, NAME , PASSWORD, MARKS, ATTEMPT):
-        self.EMAIL = EMAIL
-        self.NAME= NAME
-        self.PASSWORD = PASSWORD
-        self.MARKS = MARKS
-        self.ATTEMPT = ATTEMPT
+# class regi(db.Model):  # regi table
+#     EMAIL = db.Column(db.String(50), primary_key=True)
+#     NAME = db.Column(db.String(20), nullable=False, unique=False)
+#     PASSWORD = db.Column(db.String(20), nullable=False, unique=False)
+#     MARKS = db.Column(db.String(20), nullable=False)
+#     ATTEMPT = db.Column(db.String(20), nullable=False)
+#
+#     def __int__(self, EMAIL, NAME , PASSWORD, MARKS, ATTEMPT):
+#         self.EMAIL = EMAIL
+#         self.NAME= NAME
+#         self.PASSWORD = PASSWORD
+#         self.MARKS = MARKS
+#         self.ATTEMPT = ATTEMPT
 
 
 @app.route("/onsignup", methods=["POST", "GET"])
@@ -304,22 +305,22 @@ def showll():
     return render_template("showall.html", list=objects_list)
 
 
-class que(db.Model):
-    QUID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    QUES = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION1 = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION2 = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION3 = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION4 = db.Column(db.String(100), unique=False, nullable=False)
-    CORRANS = db.Column(db.Integer, unique=False, nullable=False)
-
-    def __init__(self, QUES, OPTION1, OPTION2, OPTION3, OPTION4, CORRANS):
-        self.QUES = QUES
-        self.OPTION1 = OPTION1
-        self.OPTION2 = OPTION2
-        self.OPTION3 = OPTION3
-        self.OPTION4 = OPTION4
-        self.CORRANS = CORRANS
+# class que(db.Model):
+#     QUID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     QUES = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION1 = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION2 = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION3 = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION4 = db.Column(db.String(100), unique=False, nullable=False)
+#     CORRANS = db.Column(db.Integer, unique=False, nullable=False)
+#
+#     def __init__(self, QUES, OPTION1, OPTION2, OPTION3, OPTION4, CORRANS):
+#         self.QUES = QUES
+#         self.OPTION1 = OPTION1
+#         self.OPTION2 = OPTION2
+#         self.OPTION3 = OPTION3
+#         self.OPTION4 = OPTION4
+#         self.CORRANS = CORRANS
 
 
 @app.route("/addquestion", methods=["POST", "GET"])

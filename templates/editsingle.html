@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}
+  MCQ QUIZ |Add Question
+{% endblock %}
+
+{% block body %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<div
+    style="font-size: 50px; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+    EDIT This Question
+</div>
+<br>
+{%if queid %}
+<form id="quickForm" action="/edit" method="POST" style="height: 2.5rem; font-size: 1rem;left: 20px;">
+    QUE ID :
+    <br>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="queid" value="{{queid[0]}}" readonly>
+    </div>
+    QUESTION :
+    <br>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="question" value="{{queid[1]}}"  >
+    </div>
+    OPTION 1:
+    <br>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op1" placeholder="Option #1"  value="{{queid[2]}}">
+    </div>
+    OPTION 2:
+    <br>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op2" placeholder="Option #2"  value="{{queid[3]}}">
+    </div>
+    OPTION 3:
+    <br>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op3" placeholder="Option #3"  value="{{queid[4]}}">
+    </div>
+    OPTION 4:
+    <br>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="op4" placeholder="Option #4"  value="{{queid[5]}}">
+    </div>
+    ANSWER QUESTION:
+    <br>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="correct" placeholder="correct"  value="{{queid[6]}}">
+    </div>
+        <button type="submit" class="btn btn-outline-secondary" style="width: 65rem; height: 2.5rem; font-size: 1rem;left: 20px;">Update Question</button>
+    </div>
+</form>
+{%endif%}
+
+{% endblock %}
+
+
+
+{% block navbar%}
+<li class="nav-item">
+    <a href="/add" class="nav-link">
+        <p style ="font-family: 'Orbitron', sans-serif;">
+            Add Questions
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="/editques" class="nav-link">
+        <p style ="font-family: 'Orbitron', sans-serif;">
+            Edit Questions
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="/showall" class="nav-link">
+        <p style ="font-family: 'Orbitron', sans-serif;">
+            Check All Results
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="/logout" class="nav-link">
+        <p style ="font-family: 'Orbitron', sans-serif;">
+            Logout
+        </p>
+    </a>
+</li>
+{% endblock %}

@@ -12,25 +12,75 @@
     style="font-size: 50px; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
     MCQ QUIZ | EDIT
 </div>
+<style>
+    table, th, td,tr {
+  border: 1px solid black;
+}
+</style>
 <hr>
 
-    <section>
-        {% for list in array%}
-        <div style="font-size: 30px;">
+<!--    <section>-->
+<!--        {% for list in array%}-->
+<!--        <div style="font-size: 30px;">-->
 
-            <b>Qno.{{list.qnum}}</b>
-            <br>
-            <b>{{list.question}}</b>
-        </div>
-            <div style="font-size: 30px; margin-top: 2rem;">
-                <button type="submit" class="btn btn-outline-secondary" style="width: 66rem; height: 2.5rem; font-size: 1rem; left: 28px;">EDIT</button>
-            </div>
-            {% endfor %}
+<!--            <b>Qno.{{list.qnum}}</b>-->
+<!--            <br>-->
+<!--            <b>{{list.question}}</b>-->
+<!--        </div>-->
+<!--            <div style="font-size: 30px; margin-top: 2rem;">-->
+<!--                <button type="submit" class="btn btn-outline-secondary" style="width: 66rem; height: 2.5rem; font-size: 1rem; left: 28px;">EDIT</button>-->
+<!--            </div>-->
+<!--            {% endfor %}-->
 
-            <br>
-        </form>
-    </section>
-</div>
+<!--            <br>-->
+<!--        </form>-->
+<!--    </section>-->
+<div class="table-responsive-lg caption-top">
+        <caption>
+            <h5>LIST OF ALL QUESTION</h5>
+        </caption>
+        <hr>
+        {% if que %}
+        <table class="table" style="border= 2px solid black;">
+            <thead>
+                <tr>
+                    <th scope="col">S.NO.</th>
+                    <th scope="col">QUESTION</th>
+                    <th scope="col">OPTION 1</th>
+                    <th scope="col">OPTION 2</th>
+                    <th scope="col">OPTION 3</th>
+                    <th scope="col">OPTION 4</th>
+                    <th scope="col">ANSWER</th>
+                    <th scope="col">EDIT</th>
+                    <th scope="col">DELETE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for q in que %}
+                <tr>
+
+                    <th scope="row">{{ q[1] }}</th>
+                    <td>{{ q[0][1] }}</td>
+                    <td>{{ q[0][2] }}</td>
+                    <td>{{ q[0][3] }}</td>
+                    <td>{{ q[0][4] }}</td>
+                    <td>{{ q[0][5] }}</td>
+                    <td>{{ q[0][6] }}</td>
+                    <td>
+                        <a class="btn btn-sm" style="background-color:rgb(0, 0,0); color:whitesmoke;"
+                        href="{{url_for('editsingle', queid =q[0][0]) }}">Edit
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm" style="background-color:rgb(0, 0, 0); color:whitesmoke;"
+                         href="{{url_for('delete', queid =q[0][0]) }}"   >Delete
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+                {% endif %}
 
 
 {% endblock %}

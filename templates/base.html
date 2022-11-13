@@ -50,10 +50,20 @@
           <a href="/index" style="color:rgb(198, 204, 209); font-family: 'Orbitron', sans-serif;"  class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="/contact" style="color:rgb(198, 204, 209); font-family: 'Orbitron', sans-serif;" class="nav-link">Contact</a>
+          <a href="/contact" style="color:rgb(198, 204, 209); font-family: 'Orbitron', sans-serif;" class="nav-link">Contact </a>
         </li>
       </ul>
-
+      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+      <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              {%  if user%}
+                <a href="/profile" style="color:rgb(198, 204, 209); font-family: 'Orbitron', sans-serif;" class="nav-link">NAME- {{user}}</a>
+              {% else %}
+                <a></a>
+              {% endif %}
+            </li>
+        </ul>
+        </div>
 
 
       <!-- Right navbar links -->
@@ -111,31 +121,22 @@
       </section>
     </div>
 <br>
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" style="color:white" href="#">Right</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-        </ul>
-    </div>
+
 
 
 
   <!-- ./wrapper -->
 
-  <!-- jQuery -->
-  <script src="../plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
-  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- overlayScrollbars -->
-  <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-  <!-- AdminLTE App -->
-  <script src="../static/js/adminlte.min.js"></script>
-  <!-- AdminLTE for demo purposes -->
-  <script src="../static/js/demo.js"></script>
+<!--  &lt;!&ndash; jQuery &ndash;&gt;-->
+<!--  <script src="../plugins/jquery/jquery.min.js"></script>-->
+<!--  &lt;!&ndash; Bootstrap 4 &ndash;&gt;-->
+<!--  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+<!--  &lt;!&ndash; overlayScrollbars &ndash;&gt;-->
+<!--  <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>-->
+<!--  &lt;!&ndash; AdminLTE App &ndash;&gt;-->
+<!--  <script src="../static/js/adminlte.min.js"></script>-->
+<!--  &lt;!&ndash; AdminLTE for demo purposes &ndash;&gt;-->
+<!--  <script src="../static/js/demo.js"></script>-->
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,session
+from flask import Flask, render_template, request,session,redirect,url_for
 from model import  db,engine,regi,que,app
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -36,6 +36,10 @@ class Score:
     email = ""
     score = ""
 
+def current_user():
+    user=None
+    user=session['name']
+    return user
 
 # function to spearate username and password
 def getField(line, field):  # separating username and password field
@@ -84,50 +88,51 @@ def making_marks(listElement):
 
 @app.route("/quiz", methods=["POST", "GET"])
 def quiz():
-    qno = 0
-    whole_quiz = []
-    questions = []
-    questions = engine.execute("select * from que").fetchall()
-    # print(questions);
-    # myFile=open("questions.txt" , "r")
-    # ques = myFile.read().splitlines()
-    # myFile.close()
+    try:
+        if(session['name']):
+            questions = engine.execute("select * from que").fetchall()
+            str = ""
+            whole_quiz=[]
+            qno = 0
+            for element in questions:
+                qno += 1
+                str = element[1]
+                str += ","
+                str += element[2]
+                str += ","
+                str += element[3]
+                str += ","
+                str += element[4]
+                str += ","
+                str += element[5]
+                str += ","
+                if element[6] == 1:
+                    str += element[2]
+                elif element[6] == 2:
+                    str += element[3]
+                elif element[6] == 3:
+                    str += element[4]
+                else:
+                    str += element[5]
 
-    # for element in ques:
-    #     print(element)
-    # print(len(questions))
-    for element in questions:
-        qno += 1
-        # print(element[0])
-        str = element[1]
-        str += ","
-        str += element[2]
-        str += ","
-        str += element[3]
-        str += ","
-        str += element[4]
-        str += ","
-        str += element[5]
-        str += ","
-        if element[6] == 1:
-            str += element[2]
-        elif element[6] == 2:
-            str += element[3]
-        elif element[6] == 3:
-            str += element[4]
-        else:
-            str += element[5]
+                print(str)
+                obj = making_objects(str, qno)
+                whole_quiz.append(obj)
 
-        print(str)
-        obj = making_objects(str, qno)
-        whole_quiz.append(obj)
-
-    qno = 0
-    return render_template("quiz.html", array=whole_quiz)
-
+                return render_template("quiz.html",user=session['name'], array=whole_quiz)
+    except:
+        return render_template("login.html")
 @app.route("/")
 def ba():
-    return render_template("index.html")
+    try:
+        if current_user() == "admin":
+            return render_template("admin.html", user=current_user())
+        elif current_user():
+            return render_template("user.html", user=current_user())
+        else:
+            return render_template("login.html")
+    except:
+        return render_template("login.html")
 
 @app.route("/<name>")
 def bas(name):
@@ -141,18 +146,15 @@ def basic():
 
 @app.route("/index")
 def home():
-    global email
-    global password
-
-    if email == "admin@host.local" and password == "12789":
-        return render_template("admin.html")
-    elif verify(email, password):
-        emailsave.emailid = email
-        return render_template("user.html", var=authentic)
-    return render_template("index.html")
-
-
-# return render_template("showProd.html" , list= objects_list)
+    try:
+        if current_user() == "admin":
+            return render_template("admin.html", user=current_user())
+        elif current_user():
+            return render_template("user.html", user=current_user())
+        else:
+            return render_template("login.html")
+    except:
+        return render_template("index.html")
 
 
 # class regi(db.Model):  # regi table
@@ -173,65 +175,36 @@ def home():
 @app.route("/onsignup", methods=["POST", "GET"])
 def submit():
     if request.method == "POST":
-        # 'add entry to DB'
-
-        NAME = request.form.get('name')
-        EMAIL = request.form.get('email')
-        PASSWORD = request.form.get('password')
-        ENTRY = regi(EMAIL=EMAIL, NAME= NAME, PASSWORD=PASSWORD, MARKS=0, ATTEMPT=0)
-        db.session.add(ENTRY)
+        n = request.form.get('name')
+        name = n.strip()
+        e = request.form.get('email')
+        email= e.strip()
+        p = request.form.get('password')
+        password = p.strip()
+        entry = regi(EMAIL=email, NAME= name, PASSWORD=password, MARKS=0, ATTEMPT=0)
+        db.session.add(entry)
         db.session.commit()
-        # complete = str(name) + "," + str(email) + "," + str(password) + "," + "0" + "," + "0" + "," + "0"
-        # myFile=open("dataCSV.txt" , "a")
-        # print(complete , file= myFile , sep="\n")
-        # myFile.close()
 
     return render_template("index.html")
-
-    # global email
-    # global password
-    # global name
-    #
-    # name=request.form.get('name')
-    # email=request.form.get('email')
-
-
-#  # password=request.form.get('password')
-# complete= str(name)+ "," +str(email)+ "," +str(password)+ "," +"0"+","+"0"+","+"0"
-
-
-# ashu : i have to put database here
-# myFile=open("dataCSV.txt" , "a")
-# print(complete , file= myFile , sep="\n")
-# myFile.close()
-# try:
-#     db.execute('INSERT INTO ashu (name,username, password) VALUES (?, ?)', (self.username, self.password))
-# except:
-#     db.execute('CREATE TABLE users (id INTEGER PRIMARY KEY , username TEXT, password TEXT)')
-#     raise UserNotFoundError('The table `users` did not exist, but it was created. Run the registration again.')
-# finally:
-#     connection.commit()
-#     connection.close()
 
 @app.route("/onlogin", methods=["POST", "GET"])
 def userVerify():
     email = request.form.get('email')
     password = request.form.get('password')
 
-     #myFile=open("dataCSV.txt" , "r")
-    # wholeCredentials = myFile.read().splitlines()
-    # myFile.close()
-
     if verify(email, password):
-        # cursor =mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         emailsave.emailid = email
         session['email'] = email
-        return render_template("user.html", var=authentic)
+        name = engine.execute("select name from regi where email= %s",[email]).fetchone()
+        print(name)
+        session['name']= name[0].upper()
+        return render_template("user.html", user = current_user())
 
     elif email == "admin@host.local" and password == "12789":
         e= "admin@host.local"
         session['email'] = e
-        return render_template("admin.html")
+        session['name']= "admin".upper()
+        return render_template("admin.html" , user =current_user())
     return render_template("invalid.html")
 
 
@@ -248,12 +221,18 @@ def verify(email, pw):
 
 @app.route("/showall", methods=["POST", "GET"])
 def showll():
-    data = engine.execute("select name, email , marks from regi").fetchall()
-    for element in data:
-        obj = making_marks(element)
-        objects_list.append(obj)
+    try:
+        if (session['name']):
+            objects_list=[]
+            data = engine.execute("select name, email , marks from regi").fetchall()
+            for element in data:
+                obj = making_marks(element)
+                objects_list.append(obj)
 
-    return render_template("showall.html", list=objects_list)
+            return render_template("showall.html", user=session['name'], list=objects_list)
+    except:
+        return render_template("login.html")
+
 
 
 # class que(db.Model):
@@ -292,90 +271,62 @@ def add_question():
 
 @app.route("/submit", methods=["POST", "GET"])
 def submit_quiz():
-    global email
-    wholeCredentials = []
+    try:
+        if(session['name']):
+            global email
+            wholeCredentials = []
 
-    attempts = []
-    score = 0
-    whole_quiz = []
-    number = 0
-    questions = engine.execute("select * from que").fetchall()
-    # print(questions);
-    # myFile=open("questions.txt" , "r")
-    # ques = myFile.read().splitlines()
-    # myFile.close()
+            attempts = []
+            score = 0
+            whole_quiz = []
+            number = 0
+            questions = engine.execute("select * from que").fetchall()
 
-    # for element in ques:
-    #     print(element)
-    # print(len(questions))
-    for element in questions:
-        # print(element[0])
-        s = element[1]
-        s += ","
-        s += element[2]
-        s += ","
-        s += element[3]
-        s += ","
-        s += element[4]
-        s += ","
-        s += element[5]
-        s += ","
-        if element[6] == 1:
-            s += element[2]
-        elif element[6] == 2:
-            s += element[3]
-        elif element[6] == 3:
-            s += element[4]
-        else:
-            s += element[5]
+            for element in questions:
+                # print(element[0])
+                s = element[1]
+                s += ","
+                s += element[2]
+                s += ","
+                s += element[3]
+                s += ","
+                s += element[4]
+                s += ","
+                s += element[5]
+                s += ","
+                if element[6] == 1:
+                    s += element[2]
+                elif element[6] == 2:
+                    s += element[3]
+                elif element[6] == 3:
+                    s += element[4]
+                else:
+                    s += element[5]
 
-        print(s)
-        obj = making_objects(s, number)
-        whole_quiz.append(obj)
+                print(s)
+                obj = making_objects(s, number)
+                whole_quiz.append(obj)
 
-    # myFile=open("questions.txt" , "r")
-    # questions = myFile.read().splitlines()
-    # myFile.close()
-    # number=0
-    # for element in questions:
-    #     print(element)
-    #     print(number)
-    #     obj= making_objects(element , number)
-    #     whole_quiz.append(obj)
+            for idx in range(0, len(whole_quiz)):
+                mcq = "mcq" + str(idx + 1)
+                attempts.append(request.form.get(mcq))
 
-    for idx in range(0, len(whole_quiz)):
-        mcq = "mcq" + str(idx + 1)
-        attempts.append(request.form.get(mcq))
+            for udx in attempts:
+                print(udx)
 
-    for udx in attempts:
-        print(udx)
+            for idx in range(0, len(whole_quiz)):
+                if whole_quiz[idx].correct == attempts[idx]:
+                    score += 1
 
-    for idx in range(0, len(whole_quiz)):
-        if whole_quiz[idx].correct == attempts[idx]:
-            score += 1
-
-    # myFile=open("dataCSV.txt" , "r")
-    # wholeCredentials = myFile.read().splitlines()
-    # myFile.close()
-    #
-    # for idx in range(0,len(wholeCredentials)):
-    #     if email==getField(wholeCredentials[idx],1):
-    #         wholeCredentials[idx]= str(getField(wholeCredentials[idx],0))+ ","+str(getField(wholeCredentials[idx],1))+ "," +str(getField(wholeCredentials[idx],2))+ "," +str(score)+ "," +str(len(attempts))+ "," +str(len(whole_quiz))
-    #
-    # myFile=open("dataCSV.txt" , "w")
-    # for record in wholeCredentials:
-    #     print(record , file= myFile , sep="\n")
-    #
-    # myFile.close()
-    data = engine.execute('select attempt from regi where email = %s', [emailsave.emailid]).fetchone()
-    print(emailsave.emailid)
-    print(data)
-    engine.execute('Update regi set marks =%s where email =%s', [score, emailsave.emailid])
-    engine.execute('Update regi set attempt =%s where email =%s', [data[0]+ 1, emailsave.emailid])
-    print("Your score is:", score)
-    return render_template("user.html")
-
-
+            data = engine.execute('select attempt from regi where email = %s', [emailsave.emailid]).fetchone()
+            print(emailsave.emailid)
+            print(data)
+            engine.execute('Update regi set marks =%s where email =%s', [score, emailsave.emailid])
+            engine.execute('Update regi set attempt =%s where email =%s', [data[0]+ 1, emailsave.emailid])
+            print("Your score is:", score)
+            return render_template("user.html",user=current_user())
+    except:
+        return render_template("login.html")
 @app.route("/login", methods=["POST", "GET"])
 def validation():
     return render_template("login.html")
@@ -383,58 +334,114 @@ def validation():
 
 @app.route("/show", methods=["POST", "GET"])
 def results():
-    # global email
-    # wholeCredentials = []
-    # attempts = 0
-    # myFile=open("dataCSV.txt" , "r")
-    # wholeCredentials = myFile.read().splitlines()
-    # myFile.close()
-    #
-    # score = 0
-    # print(email)
-    # for result in wholeCredentials:
-    #     check = getField(result, 1)
-    #     if email == check:
-    #         score = str(getField(result, 3))
-    #         attempts = str(getField(result, 4))
-    data = engine.execute('select marks,attempt from regi where email = %s', [emailsave.emailid]).fetchone()
-    print(data)
-    return render_template("result.html", var1=data[0], var2=data[1])
+    try:
+        if current_user():
+            data = engine.execute('select marks,attempt from regi where email = %s', [session['email']]).fetchone()
+            print(data)
+            return render_template("result.html", user=current_user() ,var1=data[0], var2=data[1])
+    except:
+        return render_template("login.html")
 
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
+    session.clear()
     return render_template("register.html")
 
 
 @app.route("/quizstrt", methods=["POST", "GET"])
 def strt():
-    return render_template("quizstrt.html")
+    try:
+        if current_user():
+           return render_template("quizstrt.html", user=session['name'])
+    except:
+        return render_template("login.html")
 
 
 @app.route("/contact", methods=["POST", "GET"])
 def get_social():
-    return render_template("contact.html")
+    try:
+        if current_user():
+           return render_template("contact.html", user=session['name'])
+    except:
+        return render_template("contact.html")
 
 
+@app.route("/delete/<int:queid>", methods=["POST", "GET"])
+def delete(queid):
+    engine.execute("delete from que where quid=%s",[queid])
+    return redirect(url_for('editques'))
+@app.route("/editsingle/<int:queid>", methods=["POST", "GET"])
+def editsingle(queid):
+    print(1)
+    print(queid)
+    questions = engine.execute('select * from que where quid=%s',(queid,))
+    str = []
+    print(questions)
+    for element in questions:
+        str.append(element[0])
+        str.append(element[1])
+        str.append(element[2])
+        str.append(element[3])
+        str.append(element[4])
+        str.append(element[5])
+        str.append(element[6])
+
+    print(str)
+    #     return
+    return render_template("editsingle.html",user=current_user(),queid=str)
+
+@app.route("/edit" , methods=["POST", "GET"])
+def edit():
+    if request.method== "POST":
+        queid =request.form['queid']
+        question=request.form['question']
+        op1 = request.form['op1']
+        op2 = request.form['op2']
+        op3 = request.form['op3']
+        op4 = request.form['op4']
+        correct= request.form['correct']
+
+        engine.execute("update que set ques=%s, option1= %s , option2= %s, option3= %s, option4=%s, CORRANS=%s where quid=%s" ,[question,op1,op2,op3,op4,correct,queid]);
+    return redirect(url_for('editques'))
 @app.route("/add", methods=["POST", "GET"])
 def add():
-    return render_template("addques.html")
+    try:
+        if current_user():
+            return render_template("addques.html", user=current_user())
+    except:
+        return render_template("login.html")
+
+
 
 @app.route("/editques", methods=["POST", "GET"])
-def edit():
-    if request.method=="POST":
-        ques= request.form.get()
+def editques():
+        if current_user():
+            questions = engine.execute("select * from que").fetchall()
+            whole_quiz = []
+            qno = 0
+            print(questions)
+            for element in questions:
+                qno += 1
+                str=[]
+                str.append(element[0])
+                str.append(element[1])
+                str.append(element[2])
+                str.append(element[3])
+                str.append(element[4])
+                str.append(element[5])
+                str.append(element[6])
 
-    return render_template("editques.html")
+                print(str)
+                obj = [str, qno]
+                whole_quiz.append(obj)
+            return render_template("editques.html", user=current_user(),que=whole_quiz)
+    # except:
+    #     return render_template("login.html")
 
 @app.route("/logout", methods=["POST", "GET"])
 def logout():
-    global email
-    global password
-    email = ""
-    password = ""
-    emailsave.emailid=""
+    session.clear()
     return render_template("index.html")
 
 

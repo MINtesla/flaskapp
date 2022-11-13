@@ -1,48 +1,40 @@
 {% extends "base.html" %}
 
 {% block title %}
-  MCQ QUIZ |Results
+  MCQ QUIZ |Take Quiz
 {% endblock %}
-
 
 {% block body %}
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
 
-<div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <label style=" font-size: 1.5rem;">Results</label>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<!-- Main content -->
+<div
+    style="font-size: 50px; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+    MCQ QUIZ | EDIT
+</div>
+<hr>
+
+    <section>
+        {% for list in array%}
+        <div style="font-size: 30px;">
+
+            <b>Qno.{{list.qnum}}</b>
+            <br>
+            <b>{{list.question}}</b>
         </div>
-        <!-- /.card-header -->
-        <div class="card-body table-responsive p-0">
-          <table class="table table-hover text-nowrap">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for marks in list %}
-              <tr>
-                <td>{{marks.name}}</td>
-                <td>{{marks.email}}</td>
-                <td>{{marks.score}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <!-- /.card-body -->
-      </div>
-      <!-- /.card -->
-    </div>
-  </div>
-  <!-- /.row -->
+            <div style="font-size: 30px; margin-top: 2rem;">
+                <button type="submit" class="btn btn-outline-secondary" style="width: 66rem; height: 2.5rem; font-size: 1rem; left: 28px;">EDIT</button>
+            </div>
+            {% endfor %}
+
+            <br>
+        </form>
+    </section>
+</div>
+
 
 {% endblock %}
+
 
 
 {% block navbar%}

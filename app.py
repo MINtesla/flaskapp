@@ -1,26 +1,9 @@
-from flask import Flask, render_template, request
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-
+from flask import Flask, render_template, request,session
+from model import  db,engine,regi,que,app
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
-port = int(os.environ.get('PORT', 5000))
+port = int(os.environ.get('PORT', 4000))
 
-app = Flask(__name__, template_folder="templates")
-#
-#conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flproj"
-conn= "mysql+pymysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
-# cloud string
-
-app.config['SQLALCHEMY_DATABASE_URI'] = conn
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
-
-engine = create_engine(conn)
-connection = engine.raw_connection()
-cursor = connection.cursor()
-
-#from model import regi, que
 q = 0
 qq = 0
 
@@ -172,19 +155,19 @@ def home():
 # return render_template("showProd.html" , list= objects_list)
 
 
-class regi(db.Model):  # regi table
-    EMAIL = db.Column(db.String(50), primary_key=True)
-    NAME = db.Column(db.String(20), nullable=False, unique=False)
-    PASSWORD = db.Column(db.String(20), nullable=False, unique=False)
-    MARKS = db.Column(db.String(20), nullable=False)
-    ATTEMPT = db.Column(db.String(20), nullable=False)
-
-    def __int__(self, EMAIL, NAME , PASSWORD, MARKS, ATTEMPT):
-        self.EMAIL = EMAIL
-        self.NAME= NAME
-        self.PASSWORD = PASSWORD
-        self.MARKS = MARKS
-        self.ATTEMPT = ATTEMPT
+# class regi(db.Model):  # regi table
+#     EMAIL = db.Column(db.String(50), primary_key=True)
+#     NAME = db.Column(db.String(20), nullable=False, unique=False)
+#     PASSWORD = db.Column(db.String(20), nullable=False, unique=False)
+#     MARKS = db.Column(db.String(20), nullable=False)
+#     ATTEMPT = db.Column(db.String(20), nullable=False)
+#
+#     def __int__(self, EMAIL, NAME , PASSWORD, MARKS, ATTEMPT):
+#         self.EMAIL = EMAIL
+#         self.NAME= NAME
+#         self.PASSWORD = PASSWORD
+#         self.MARKS = MARKS
+#         self.ATTEMPT = ATTEMPT
 
 
 @app.route("/onsignup", methods=["POST", "GET"])
@@ -232,23 +215,22 @@ def submit():
 
 @app.route("/onlogin", methods=["POST", "GET"])
 def userVerify():
-    global email
-    global password
-    global wholeCredentials
-    global authentic
     email = request.form.get('email')
     password = request.form.get('password')
 
-    # myFile=open("dataCSV.txt" , "r")
+     #myFile=open("dataCSV.txt" , "r")
     # wholeCredentials = myFile.read().splitlines()
     # myFile.close()
 
     if verify(email, password):
         # cursor =mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         emailsave.emailid = email
+        session['email'] = email
         return render_template("user.html", var=authentic)
 
     elif email == "admin@host.local" and password == "12789":
+        e= "admin@host.local"
+        session['email'] = e
         return render_template("admin.html")
     return render_template("invalid.html")
 
@@ -263,64 +245,33 @@ def verify(email, pw):
     except:
         return False
 
-    # emailList = []
-    # passwordList = []
-    # global authentic
-    #
-    # wholeCredentials = []
-    #
-    # myFile=open("dataCSV.txt" , "r")
-    # wholeCredentials = myFile.read().splitlines()
-    # myFile.close()
-    #
-    # for idx in range(0, len(wholeCredentials)):
-    #     emailList.append(getField( wholeCredentials[idx] , 1 ))
-    #     passwordList.append(getField( wholeCredentials[idx] , 2 ))
-    #
-    # print(len(wholeCredentials))
-    # print(len(emailList))
-    # print(len(passwordList))
-    #
-    # for idx in range( 0 , len(emailList)):
-    #     if email == emailList[idx] and pw == passwordList[idx]:
-    #         authentic = getField( wholeCredentials[idx] , 0 )
-    #         print(authentic)
-    #         return True
-    # return False
-
 
 @app.route("/showall", methods=["POST", "GET"])
 def showll():
-    objects_list = []
-    whole = []
     data = engine.execute("select name, email , marks from regi").fetchall()
-    #data = regi.query.all()
-    print(data)
-    num = 0
     for element in data:
-        print(element)
         obj = making_marks(element)
         objects_list.append(obj)
 
     return render_template("showall.html", list=objects_list)
 
 
-class que(db.Model):
-    QUID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    QUES = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION1 = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION2 = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION3 = db.Column(db.String(100), unique=False, nullable=False)
-    OPTION4 = db.Column(db.String(100), unique=False, nullable=False)
-    CORRANS = db.Column(db.Integer, unique=False, nullable=False)
-
-    def __init__(self, QUES, OPTION1, OPTION2, OPTION3, OPTION4, CORRANS):
-        self.QUES = QUES
-        self.OPTION1 = OPTION1
-        self.OPTION2 = OPTION2
-        self.OPTION3 = OPTION3
-        self.OPTION4 = OPTION4
-        self.CORRANS = CORRANS
+# class que(db.Model):
+#     QUID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     QUES = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION1 = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION2 = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION3 = db.Column(db.String(100), unique=False, nullable=False)
+#     OPTION4 = db.Column(db.String(100), unique=False, nullable=False)
+#     CORRANS = db.Column(db.Integer, unique=False, nullable=False)
+#
+#     def __init__(self, QUES, OPTION1, OPTION2, OPTION3, OPTION4, CORRANS):
+#         self.QUES = QUES
+#         self.OPTION1 = OPTION1
+#         self.OPTION2 = OPTION2
+#         self.OPTION3 = OPTION3
+#         self.OPTION4 = OPTION4
+#         self.CORRANS = CORRANS
 
 
 @app.route("/addquestion", methods=["POST", "GET"])
@@ -336,11 +287,6 @@ def add_question():
     question = que(QUES=ques, OPTION1=op1, OPTION2=op2, OPTION3=op3, OPTION4=op4, CORRANS=cor)
     db.session.add(question)
     db.session.commit()
-    #
-    # complete = ques + "," + op1 + "," + op2 + "," + op3 + "," + op4 + "," + cor
-    # myFile = open("questions.txt", "a")
-    # print(complete, file=myFile, sep="\n")
-    # myFile.close()
     return render_template("admin.html")
 
 
@@ -475,6 +421,12 @@ def get_social():
 def add():
     return render_template("addques.html")
 
+@app.route("/editques", methods=["POST", "GET"])
+def edit():
+    if request.method=="POST":
+        ques= request.form.get()
+
+    return render_template("editques.html")
 
 @app.route("/logout", methods=["POST", "GET"])
 def logout():
@@ -482,6 +434,7 @@ def logout():
     global password
     email = ""
     password = ""
+    emailsave.emailid=""
     return render_template("index.html")
 
 

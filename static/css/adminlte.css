@@ -404,6 +404,10 @@ h6, .h6 {
   line-height: 1.2;
 }
 
+curr_user{
+allign: right;
+
+}
 .display-2 {
   font-size: 5.5rem;
   font-weight: 300;

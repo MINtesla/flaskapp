@@ -1,5 +1,19 @@
-from __main__ import db
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+import pymysql
 
+#conn= "mysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
+conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flproj"
+
+app = Flask(__name__, template_folder="templates")
+app.secret_key='ashu'
+app.config['SQLALCHEMY_DATABASE_URI'] = conn
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
+db = SQLAlchemy(app)
+
+engine = create_engine(conn)
 
 class regi(db.Model):  # regi table
     EMAIL = db.Column(db.String(50), primary_key=True)

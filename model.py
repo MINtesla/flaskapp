@@ -3,8 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import pymysql
 
-#conn= "mysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
-conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flproj"
+conn= "mysql://uwvz37zxmlbidnle:xZjdCmyA3Z3kzb5DLjWu@bben9imzfrolsrilnbyy-mysql.services.clever-cloud.com:3306/bben9imzfrolsrilnbyy"
+#conn = "mysql+pymysql://root:PASSWORD@127.0.0.1:3306/flproj"
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key='ashu'
